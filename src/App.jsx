@@ -15,7 +15,7 @@ function App() {
     
     console.log(accueil);
   }, [window.location.pathname]);
- 
+ //aaaas
 
   if (window.location.pathname === "/") {
     return (
