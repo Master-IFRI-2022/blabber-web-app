@@ -1,4 +1,7 @@
+import axios, { Axios } from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { recupUsers, recupAccesstoken } from '../feature/UserSlice';
 // import { useNavigate } from 'react-router-dom';
 
 
@@ -7,6 +10,39 @@ import React, { useEffect, useState } from 'react';
 const Homepage = () => {
     // const navigate = useNavigate();
     const [modifmdp, setModifmdp] = useState(false);
+    // const [errInsc, setErrInsc] = useState()
+    const dispatch = useDispatch();
+
+
+
+
+
+
+    // const conn = () => {
+    //     try {
+
+
+
+    //         axios.post("http://localhost:3030/authentication", data, { headers }).then((ret) => {
+    //             if (ret) {
+    //                 // console.log("Succes");
+    //                 dispatch(recupUsers(ret.data));
+    //                 localStorage.setItem("users", JSON.stringify(ret.data));
+    //             } else {
+
+    //             }
+    //         }).catch((err) => {
+    //             // seterror(err.response.data.message);
+    //             console.log(err.response.data.message);
+    //         })
+
+
+    //     } catch (e) { }
+    // }
+    let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    const [error, seterror] = useState('');
+    const [succ1, setsucc1] = useState('');
     const [connectForm, setConnectForm] = useState({
         email: "",
         mdp: "",
@@ -37,15 +73,113 @@ const Homepage = () => {
         // console.log(name);
         setInscriForm({ ...inscriForm, [name]: value })
     }
+    const enregistrement = (e) => {
+        if (inscriForm.mdp.length > 8 || inscriForm.mdp.length == 8 ) {
+            if (inscriForm.email.match(regex)) {
+                if (inscriForm.mdp === inscriForm.conf_mdp) {
+                    seterror(null)
+    
+                    axios.post("http://localhost:3030/users", {
+                        lastname: inscriForm.nom,
+                        firstname: inscriForm.prenom,
+                        username: inscriForm.username,
+                        email: inscriForm.email,
+                        password: inscriForm.mdp,
+                    }).then((ret) => {
+                        if (ret) {
+                            console.log("Succes");
+                            setsucc1("Utilisateur créé")
 
+                            // setClicInsc(!clicInsc); setClicCon(!clicCon)
+                        } else {
+    
+                        }
+                    }).catch((err) => {
+                        console.log(err);
+                        if (err.response.data.data.hasOwnProperty('password')) {
+                            // L'attribut existe dans l'objet
+                            console.log(err.response.data.data.password.message);
+                            seterror(err.response.data.data.password.message)
+                          } else {
+                            if (err.response.data.data.hasOwnProperty('username')) {
+                                console.log(err.response.data.data.username.message);
+                                seterror(err.response.data.data.username.message)
+                            }else{
+                                console.log(err.response.data.data.email.message);
+                                seterror(err.response.data.data.email.message)
+                            }
+                            
+                            // L'attribut n'existe pas dans l'objet
+                          }
+                          
+                            // console.log(err.response);
+                            // seterror(err.response.data.data.password.message)
+                        
+    
+                    })
+                } else {
+                    seterror("The two passwords must be the same")
+                    // console.log(error);
+                }
+            } else {
+                seterror("email invalid")
+            }
+        }else{
+            seterror("Password must contain at least 8 charaters")
+        }
+       
+
+
+
+    }
+
+    const connexion = (e) => {
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2ODg0OTM5OTQsImV4cCI6MTY5MTA4NTk5NCwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsInN1YiI6IjY0YTQ1OWU1ZjU4NGFjNGFjMjg3ZDBkZiIsImp0aSI6ImYwZjExZjk5LWYyZWEtNDYxYS1iMjI5LWM4MzE2ZTdiZTYxZSJ9.dnXFL7wUASuinmSHwwNdbtDcjyVHPed8Y5lyjKBzWwc"
+
+
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+
+        const data = {
+            // strategy: "local",
+            // email: "kala@gmail.com",
+            // password: "Azerty1@",
+            strategy: "local",
+            email: connectForm.email,
+            password: connectForm.mdp,
+        }
+
+
+        axios.post("http://localhost:3030/authentication", {
+            strategy: "local",
+            email: connectForm.email,
+            password: connectForm.mdp,
+        }).then((ret) => {
+            if (ret) {
+                window.location.href = "/Discussions"
+                // console.log(ret.data);
+                // console.log(ret.data.accessToken);
+                dispatch(recupUsers(ret.data.user));
+                dispatch(recupAccesstoken(ret.data.accessToken));
+                localStorage.setItem("users", JSON.stringify(ret.data.user));
+                localStorage.setItem("accessToken", JSON.stringify(ret.data.accessToken));
+            } else {
+                window.location.href = "/Discussions"
+                //console.log("error");
+            }
+        }).catch((err) => {
+            seterror("Mot de passe ou nom d'utilisateur incorrect");
+            console.log(err.response.data.message);
+        })
+    }
 
     useEffect(() => {
         if (user) {
             setMess('Se connecter en tant que ' + user)
         }
     }, []);
-
-
 
     return (
         <div className='w-full py-[90px] px-[110px] h-full '>
@@ -91,6 +225,15 @@ const Homepage = () => {
                                 Grâce à blabber, garder le contact avec vos proches n'a jamais été aussi
                                 facile et amusant
                             </p>
+
+                            {error && (
+                                <p className='max-w-sm mt-6 text-xm mb-5 text-red-500'>
+                                    {
+                                        error
+                                    }
+                                </p>
+                            )}
+
                             <div className='max-w-sm flex flex-col text-violet-400 py-8'>
                                 {/* <label>Mot de passe</label> */}
                                 <input className='p-2 rounded-lg bg-gray-200 mt-2 focus:border-blue-500
@@ -120,10 +263,14 @@ const Homepage = () => {
                                 onClick={(e) => {
                                     // setClic1(!clic1); setClicCon(!clicCon);
                                     //   navigate('/dc');
-                                    window.location.href = "/Discussions"
+                                    connexion()
+
+                                    // window.location.href = "/Discussions"
                                 }}>
                                 Se connecter
                             </div>
+
+
                             <p className='max-w-sm text-xs text-center mt-8 text-blue-600 underline cursor-pointer'
                                 onClick={(e) => { setClicCon(!clicCon); setClicInsc(!clicInsc) }}>
                                 Pas de compte? S'inscrire
@@ -140,6 +287,20 @@ const Homepage = () => {
                                 Grâce à blabber, garder le contact avec vos proches n'a jamais été aussi
                                 facile et amusant
                             </p>
+                            {error && (
+                                <p className='max-w-sm mt-6 text-xm mb-5 text-red-500'>
+                                    {
+                                        error
+                                    }
+                                </p>
+                            )}
+                            {succ1 && (
+                                <p className='max-w-sm mt-6 text-xm mb-5 text-green-500'>
+                                    {
+                                        succ1
+                                    }
+                                </p>
+                            )}
                             <div className='max-w-sm flex  text-violet-400 py-4'>
                                 {/* <label>Mot de passe</label> */}
                                 <input className='p-2 rounded-lg bg-gray-200 mt-2 focus:border-blue-500 w-2/3 mx-2
@@ -171,7 +332,10 @@ const Homepage = () => {
 
                             <div className='max-w-sm bg-blue-500 rounded-md text-white text-center mt-11 h-7
                             shadow-lg shadow-blue-400/50 cursor-pointer hover:shadow-blue-800/50'
-                                onClick={(e) => { setClicInsc(!clicInsc); setClic1(!clic1) }}>
+                                onClick={(e) => {
+                                    // setClicInsc(!clicInsc); setClic1(!clic1);
+                                    enregistrement()
+                                }}>
                                 Créer mon compte
                             </div>
                             <p className='max-w-sm text-xs text-center mt-8 text-blue-600 underline cursor-pointer'
@@ -193,7 +357,7 @@ const Homepage = () => {
             ) : (
                 <div>
                     <div className='flex'>
-                       
+
                     </div>
                 </div>
             )

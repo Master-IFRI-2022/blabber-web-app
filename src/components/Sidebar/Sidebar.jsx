@@ -107,7 +107,12 @@ function Sidebar() {
                 </Link>
                         
                 <li className={`flex my-3 min-h-[40px] rounded-3xl p-2 cursor-pointer text-red-600 text-base items-center gap-x-4 
-                             hover:bg-blue-200 hover:shadow-md`}
+                             hover:bg-blue-200 hover:shadow-md`} onClick={()=>{
+                                localStorage.removeItem('users');
+                                localStorage.removeItem('accessToken');
+                                window.location.href = "/"
+
+                            }}
                 >
                     <AiOutlineLogout />
                     <span className={`${!open && "hidden"} origin-left duration-200`}>

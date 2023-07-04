@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Sidebar from '../components/Sidebar/Sidebar';
 import Nav from '../components/Nav/Nav';
 import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import Contact from './Contactpage';
 import Decouvertes from './Decouvertespage';
 import Demande from './Demandepage';
+import { useDispatch, useSelector } from "react-redux";
+
 
 const AccueilDash = () => {
+    // Accesstoken et INfos identifiants
+    const user = useSelector((state) => state.users.users);
+    const accessToken = useSelector((state) => state.users.accesstoken);
+
+    useEffect(() => {
+        console.log(user);
+      }, []);
 
     return (
         <div className=''>

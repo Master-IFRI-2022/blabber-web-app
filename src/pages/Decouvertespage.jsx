@@ -3,11 +3,18 @@ import { useState,useEffect } from 'react';
 import Search from '../components/Search/search';
 import ContactItem from '../components/Contacts/ContactItem';
 import ContentNav from '../components/Nav/ContentNav';
+import { useDispatch, useSelector } from "react-redux";
+
 
 export default function Decouvertespage() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
+
+    // Accesstoken et INfos identifiants
+  const user = useSelector((state) => state.users.users);
+  const accessToken = useSelector((state) => state.users.accesstoken);
+
   const actions = [
     {
       name:"Envoyer une demande",
@@ -60,6 +67,7 @@ export default function Decouvertespage() {
   }
 
   useEffect(() => {
+    console.log(accessToken);
     const fetchData = () => {
       setTimeout(() => {
         setData(contacts);
