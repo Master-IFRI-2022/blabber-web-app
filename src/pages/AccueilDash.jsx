@@ -5,6 +5,9 @@ import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import Contact from './Contactpage';
 import Decouvertes from './Decouvertespage';
 import Demande from './Demandepage';
+import Profil from './Profil';
+import ProfilContact from './ProfilContact';
+import BloquerContact from './BloquerContact'
 
 const AccueilDash = () => {
 
@@ -18,9 +21,11 @@ const AccueilDash = () => {
                             <Routes>
                                 <Route path="/Discussions" element={<>Discussions</>} />
                                 <Route path="/Contacts" element={<Contact/>} />
+                                <Route path="/Contacts/Contact-Bloquer" element={<BloquerContact/>}  />
+                                <Route path="/Contacts/idcontact/Profil" element={<ProfilContact/>}  />
                                 <Route path="/Demandes" element={<Demande/>} />
                                 <Route path="/Decouvrir" element={<Decouvertes/>} />
-                                <Route path="/Profil" element={<>Profil</>} />
+                                <Route path="/Profil" element={<Profil/>} />
                             </Routes>
                     </div>
                 </div>
