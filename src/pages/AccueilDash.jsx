@@ -8,6 +8,8 @@ import Demande from './Demandepage';
 import Profil from './Profil';
 import ProfilContact from './ProfilContact';
 import BloquerContact from './BloquerContact'
+import Group from './Group';
+import Private from './Private';
 
 const AccueilDash = () => {
 
@@ -26,6 +28,9 @@ const AccueilDash = () => {
                                 <Route path="/Demandes" element={<Demande/>} />
                                 <Route path="/Decouvrir" element={<Decouvertes/>} />
                                 <Route path="/Profil" element={<Profil/>} />
+
+                                <Route path="/Groupe" element={<Group/>} />
+                                <Route path="/Private" element={<Private/>} />
                             </Routes>
                     </div>
                 </div>
