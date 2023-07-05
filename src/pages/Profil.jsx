@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from 'react-router-dom';
 import { HiOutlinePencil,HiOutlineUserCircle, HiChatAlt } from "react-icons/hi";
 import avatar from '../assets/avatar.png';
