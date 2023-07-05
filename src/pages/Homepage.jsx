@@ -195,7 +195,7 @@ const Homepage = () => {
             {!modifmdp ? (
                 <div>
                     {clic1 ? (
-                        <img src="./blab3.png" alt="" className='h-12' />
+                        <img src="/blab3.png" alt="" className='h-12' />
                     ) : (
                         <></>
                     )}
@@ -203,7 +203,7 @@ const Homepage = () => {
                         {/* ********************************    Accueil   **************************************** */}
                         <div className={`w-1/2 pl-16 flex-row ${!clic1 ? "block" : "hidden"}`}>
                             <div className='h-20 max-w-[360px]'>
-                                <img src='./blab3.png' className='' />
+                                <img src='/blab3.png' className='' />
 
                             </div>
                             <h1 className='font-bold text-4xl max-w-sm mt-10 text-gray-600 '>
@@ -359,7 +359,7 @@ const Homepage = () => {
 
 
                         <div className='w-1/2  '>
-                            <img src='./blab33.png' className=' w-full h-full object-cover' />
+                            <img src='/blab33.png' className=' w-full h-full object-cover' />
                         </div>
                     </div>
                 </div>

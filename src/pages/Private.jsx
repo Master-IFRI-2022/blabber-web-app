@@ -1,4 +1,4 @@
-import ContactInfo from "../components/Contacts/ContactInfo"
+import ContactInfo from "../components/ContactInfo"
 
 const Private = ()=>{
     return (
