@@ -158,13 +158,14 @@ const Homepage = () => {
             password: connectForm.mdp,
         }).then((ret) => {
             if (ret) {
-                window.location.href = "/Discussions"
+                // window.location.href = "/Discussions"
                 // console.log(ret.data);
                 // console.log(ret.data.accessToken);
                 dispatch(recupUsers(ret.data.user));
                 dispatch(recupAccesstoken(ret.data.accessToken));
                 localStorage.setItem("users", JSON.stringify(ret.data.user));
                 localStorage.setItem("accessToken", JSON.stringify(ret.data.accessToken));
+                pauseThenExecute()
             } else {
                 window.location.href = "/Discussions"
                 //console.log("error");
@@ -174,6 +175,14 @@ const Homepage = () => {
             console.log(err.response.data.message);
         })
     }
+
+    async function pauseThenExecute() {
+        // Pause d'une seconde
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      
+        // Exécuter l'instruction après la pause
+        window.location.href = "/Discussions"
+      }
 
     useEffect(() => {
         if (user) {

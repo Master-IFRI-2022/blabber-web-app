@@ -6,6 +6,8 @@ import Contact from './Contactpage';
 import Decouvertes from './Decouvertespage';
 import Demande from './Demandepage';
 import { useDispatch, useSelector } from "react-redux";
+import Profil from './Profil';
+import Private from './Private';
 
 
 const AccueilDash = () => {
@@ -29,7 +31,8 @@ const AccueilDash = () => {
                                 <Route path="/Contacts" element={<Contact/>} />
                                 <Route path="/Demandes" element={<Demande/>} />
                                 <Route path="/Decouvrir" element={<Decouvertes/>} />
-                                <Route path="/Profil" element={<>Profil</>} />
+                                <Route path="/Profil" element={<Profil/>} />
+                            {/* <Route path="private"  element={<Private />} /> */}
                             </Routes>
                     </div>
                 </div>
