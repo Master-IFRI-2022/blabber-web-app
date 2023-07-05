@@ -66,14 +66,11 @@ function Sidebar() {
                         </span>
                     </li>
                 </Link>
-                <Link to={'/Contacts/Contact-Bloquer'}>
 
                 <p className={`${!open && "hidden"} mb-2 origin-left duration-200 text-sm ml-[41px] hover:text-blue-400
                         cursor-pointer `}>
                     Bloqués
                 </p>
-                </Link>
-
                 <Link to={'/Demandes'}>
                     <li className="flex my-3 min-h-[40px] rounded-3xl p-2 cursor-pointer text-gray-700 text-base items-center gap-x-4 
                              hover:bg-blue-200 hover:shadow-md"
@@ -85,7 +82,7 @@ function Sidebar() {
                     </li>
                 </Link>
 
-                <Link to={'Decouvrir'}>
+                <Link to={'Découvrir'}>
                     <li className={`flex my-3 mb-23 min-h-[40px] rounded-3xl p-2 cursor-pointer text-gray-700 text-base items-center gap-x-4 
                              hover:bg-blue-200 hover:shadow-md`}
                     >
