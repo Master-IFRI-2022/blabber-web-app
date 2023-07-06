@@ -26,7 +26,6 @@ export default () => {
   ];
   const [showmdp, setShowmdp] = useState(false);
 
-
   const user = useSelector((state) => state.users.users);
   const accessToken = useSelector((state) => state.users.accesstoken);
   let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -62,14 +61,16 @@ export default () => {
 
 
   const enregistrement = (e) => {
-    if (inscriForm.nom != "" && inscriForm.prenom != "" && inscriForm.username != "" && inscriForm.email != "") {
+    if (2 > 0) {
       if (inscriForm.email.match(regex)) {
         if (2 > 0) {
           seterror(null)
+          setsucc1(null)
           const headers = {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
           };
+
 
           axios.patch(`http://localhost:3030/users/${user._id}`,
             {
@@ -83,14 +84,17 @@ export default () => {
               if (ret) {
                 console.log("Succes");
                 setsucc1("Infos mises à jour")
-                seterror(null)
 
                 // setClicInsc(!clicInsc); setClicCon(!clicCon)
               } else {
 
               }
             }).catch((err) => {
-              setsucc1(null)
+              console.log(err);
+              console.log(inscriForm);
+              console.log(accessToken);
+              console.log(user._id);
+              console.log(err);
               if (err.response.data.data.hasOwnProperty('password')) {
                 // L'attribut existe dans l'objet
                 console.log(err.response.data.data.password.message);
@@ -104,25 +108,21 @@ export default () => {
                   seterror(err.response.data.data.email.message)
                 }
 
-                // L'attribut n'existe pas dans l'objet
+
               }
-              // }
 
 
 
             })
         } else {
           seterror("The two passwords must not be the same")
-          setsucc1(null)
           // console.log(error);
         }
       } else {
         seterror("email invalid")
-        setsucc1(null)
       }
     } else {
-      seterror("Veuillez remplir tous les champs")
-      setsucc1(null)
+      seterror("Password must contain at least 8 charaters")
     }
 
 
@@ -156,9 +156,6 @@ export default () => {
         // mdp: user.firstname,
         // conf_mdp: "motdepasse",
       });
-      // console.log("Bearer "+accessToken);
-      console.log(user._id);
-
     }
   }, []);
 
@@ -187,9 +184,9 @@ export default () => {
 
       <div className="h-[400px] flex-1  ">
 
-        {/* <h1 className='font-bold text-4xl max-w-sm mt-10 text-gray-600 '>
+        <h1 className='font-bold text-4xl max-w-sm mt-10 text-gray-600 '>
           Profil Utilisateur
-        </h1> */}
+        </h1>
 
         {error && (
           <p className='max-w-sm mt-6 text-xm mb-5 text-red-500'>

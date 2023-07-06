@@ -89,7 +89,7 @@ const Homepage = () => {
                         if (ret) {
                             console.log("Succes");
                             setsucc1("Utilisateur créé")
-
+                            seterror(null)
                             // setClicInsc(!clicInsc); setClicCon(!clicCon)
                         } else {
 
@@ -119,13 +119,18 @@ const Homepage = () => {
                     })
                 } else {
                     seterror("The two passwords must be the same")
+                    setsucc1(null)
                     // console.log(error);
                 }
             } else {
                 seterror("email invalid")
+                setsucc1(null)
+
             }
         } else {
             seterror("Password must contain at least 8 charaters")
+            setsucc1(null)
+
         }
 
 
@@ -151,51 +156,42 @@ const Homepage = () => {
             password: connectForm.mdp,
         }
 
+        if (connectForm.email && connectForm.mdp) {
+            axios.post("http://localhost:3030/authentication", {
+                strategy: "local",
+                email: connectForm.email,
+                password: connectForm.mdp,
+            }).then((ret) => {
+                if (ret) {
+                    // window.location.href = "/Discussions"
+                    // console.log(ret.data);
+                    // console.log(ret.data.accessToken);
+                    dispatch(recupUsers(ret.data.user));
+                    dispatch(recupAccesstoken(ret.data.accessToken));
+                    localStorage.setItem("users", JSON.stringify(ret.data.user));
+                    localStorage.setItem("accessToken", JSON.stringify(ret.data.accessToken));
+                    pauseThenExecute()
+                } else {
+                    window.location.href = "/Discussions"
+                    //console.log("error");
+                }
+            }).catch((err) => {
+                seterror("Mot de passe ou nom d'utilisateur incorrect");
+                console.log(err.response.data.message);
+            })
+        }else{
+            seterror("Veuillez remplir tous les champs")
+        }
 
-        axios.post("http://localhost:3030/authentication", {
-            strategy: "local",
-            email: connectForm.email,
-            password: connectForm.mdp,
-        }).then((ret) => {
-            if (ret) {
-                // window.location.href = "/Discussions"
-                // console.log(ret.data);
-                // console.log(ret.data.accessToken);
 
-                dispatch(recupUsers(ret.data.user));
-                dispatch(recupAccesstoken(ret.data.accessToken));
-                localStorage.setItem("users", JSON.stringify(ret.data.user));
-                localStorage.setItem("accessToken", JSON.stringify(ret.data.accessToken));
-                console.log(JSON.stringify(ret.data.accessToken));
-                window.location.href = "/Discussions"
-
-                // localStorage.removeItem('users');
-                // localStorage.removeItem('accessToken');
-                // pauseThenExecute(ret.data.user, ret.data.accessToken)
-            } else {
-                // window.location.href = "/Discussions"
-                //console.log("error");
-            }
-        }).catch((err) => {
-            seterror("Mot de passe ou nom d'utilisateur incorrect");
-            console.log(err.response.data.message);
-        })
     }
 
-    async function pause2() {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        window.location.href = "/Discussions"
-    }
-
-    async function pauseThenExecute(a,b) {
-        
-        
+    async function pauseThenExecute() {
         // Pause d'une seconde
         await new Promise(resolve => setTimeout(resolve, 1000));
-        localStorage.setItem("users", JSON.stringify(a));
-        localStorage.setItem("accessToken", JSON.stringify(b));
-        pause2()
+
         // Exécuter l'instruction après la pause
+        window.location.href = "/Discussions"
     }
 
     useEffect(() => {

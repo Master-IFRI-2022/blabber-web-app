@@ -16,7 +16,7 @@ const AccueilDash = () => {
     const accessToken = useSelector((state) => state.users.accesstoken);
 
     useEffect(() => {
-        console.log(accessToken);
+        console.log(user);
       }, []);
 
     return (
