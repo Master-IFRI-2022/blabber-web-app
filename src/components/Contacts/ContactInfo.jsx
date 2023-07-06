@@ -26,6 +26,7 @@ export default () => {
   ];
   const [showmdp, setShowmdp] = useState(false);
 
+
   const user = useSelector((state) => state.users.users);
   const accessToken = useSelector((state) => state.users.accesstoken);
   let regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -61,65 +62,67 @@ export default () => {
 
 
   const enregistrement = (e) => {
-    if (2 > 0 ) {
+    if (inscriForm.nom != "" && inscriForm.prenom != "" && inscriForm.username != "" && inscriForm.email != "") {
       if (inscriForm.email.match(regex)) {
         if (2 > 0) {
           seterror(null)
-
-          axios.patch(`http://localhost:3030/users/${user._id}`,  {
+          const headers = {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
-          },
-          {
-            action : "UPDATE_INFOS",
-            lastname: inscriForm.nom,
-            firstname: inscriForm.prenom,
-            username: inscriForm.username,
-            email: inscriForm.email,
-            // password: inscriForm.mdp,
-          }).then((ret) => {
-            if (ret) {
-              console.log("Succes");
-              setsucc1("Infos mises à jour")
+          };
 
-              // setClicInsc(!clicInsc); setClicCon(!clicCon)
-            } else {
+          axios.patch(`http://localhost:3030/users/${user._id}`,
+            {
+              action: "UPDATE_INFOS",
+              lastname: inscriForm.nom,
+              firstname: inscriForm.prenom,
+              username: inscriForm.username,
+              email: inscriForm.email,
+              // password: inscriForm.mdp,
+            }, { headers }).then((ret) => {
+              if (ret) {
+                console.log("Succes");
+                setsucc1("Infos mises à jour")
+                seterror(null)
 
-            }
-          }).catch((err) => {
-            console.log(err);
-            console.log(inscriForm);
-            console.log(accessToken);
-            console.log(user._id);
-            // console.log(err);
-            // if (err.response.data.data.hasOwnProperty('password')) {
-            //   // L'attribut existe dans l'objet
-            //   console.log(err.response.data.data.password.message);
-            //   seterror(err.response.data.data.password.message)
-            // } else {
-            //   if (err.response.data.data.hasOwnProperty('username')) {
-            //     console.log(err.response.data.data.username.message);
-            //     seterror(err.response.data.data.username.message)
-            //   } else {
-            //     console.log(err.response.data.data.email.message);
-            //     seterror(err.response.data.data.email.message)
-            //   }
+                // setClicInsc(!clicInsc); setClicCon(!clicCon)
+              } else {
 
-        
-            // }
+              }
+            }).catch((err) => {
+              setsucc1(null)
+              if (err.response.data.data.hasOwnProperty('password')) {
+                // L'attribut existe dans l'objet
+                console.log(err.response.data.data.password.message);
+                seterror(err.response.data.data.password.message)
+              } else {
+                if (err.response.data.data.hasOwnProperty('username')) {
+                  console.log(err.response.data.data.username.message);
+                  seterror(err.response.data.data.username.message)
+                } else {
+                  console.log(err.response.data.data.email.message);
+                  seterror(err.response.data.data.email.message)
+                }
 
-        
+                // L'attribut n'existe pas dans l'objet
+              }
+              // }
 
-          })
+
+
+            })
         } else {
           seterror("The two passwords must not be the same")
+          setsucc1(null)
           // console.log(error);
         }
       } else {
         seterror("email invalid")
+        setsucc1(null)
       }
     } else {
-      seterror("Password must contain at least 8 charaters")
+      seterror("Veuillez remplir tous les champs")
+      setsucc1(null)
     }
 
 
@@ -153,6 +156,9 @@ export default () => {
         // mdp: user.firstname,
         // conf_mdp: "motdepasse",
       });
+      // console.log("Bearer "+accessToken);
+      console.log(user._id);
+
     }
   }, []);
 
@@ -181,14 +187,21 @@ export default () => {
 
       <div className="h-[400px] flex-1  ">
 
-        <h1 className='font-bold text-4xl max-w-sm mt-10 text-gray-600 '>
+        {/* <h1 className='font-bold text-4xl max-w-sm mt-10 text-gray-600 '>
           Profil Utilisateur
-        </h1>
+        </h1> */}
 
         {error && (
           <p className='max-w-sm mt-6 text-xm mb-5 text-red-500'>
             {
               error
+            }
+          </p>
+        )}
+        {succ1 && (
+          <p className='max-w-sm mt-6 text-xm mb-5 text-green-500'>
+            {
+              succ1
             }
           </p>
         )}
@@ -245,7 +258,7 @@ export default () => {
             </div>
             <div className='w-1/3 bg-blue-500 rounded-md text-white text-center mt-11 h-7
                 shadow-lg shadow-blue-400/50 cursor-pointer hover:shadow-blue-800/50'
-              onClick={() => {enregistrement() }}
+              onClick={() => { enregistrement() }}
             >
               Mettre à jour
             </div>

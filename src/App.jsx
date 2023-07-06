@@ -27,6 +27,8 @@ function App() {
 
     if (JSON.parse(localStorage.getItem("accessToken") + "")) {
       dispatch(recupAccesstoken(JSON.parse(localStorage.getItem("accessToken") + "")));
+      console.log(JSON.parse(localStorage.getItem("accessToken") + ""));
+
     }
 
     console.log(accueil);

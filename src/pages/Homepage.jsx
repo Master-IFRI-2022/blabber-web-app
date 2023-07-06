@@ -74,11 +74,11 @@ const Homepage = () => {
         setInscriForm({ ...inscriForm, [name]: value })
     }
     const enregistrement = (e) => {
-        if (inscriForm.mdp.length > 8 || inscriForm.mdp.length == 8 ) {
+        if (inscriForm.mdp.length > 8 || inscriForm.mdp.length == 8) {
             if (inscriForm.email.match(regex)) {
                 if (inscriForm.mdp === inscriForm.conf_mdp) {
                     seterror(null)
-    
+
                     axios.post("http://localhost:3030/users", {
                         lastname: inscriForm.nom,
                         firstname: inscriForm.prenom,
@@ -92,7 +92,7 @@ const Homepage = () => {
 
                             // setClicInsc(!clicInsc); setClicCon(!clicCon)
                         } else {
-    
+
                         }
                     }).catch((err) => {
                         console.log(err);
@@ -100,22 +100,22 @@ const Homepage = () => {
                             // L'attribut existe dans l'objet
                             console.log(err.response.data.data.password.message);
                             seterror(err.response.data.data.password.message)
-                          } else {
+                        } else {
                             if (err.response.data.data.hasOwnProperty('username')) {
                                 console.log(err.response.data.data.username.message);
                                 seterror(err.response.data.data.username.message)
-                            }else{
+                            } else {
                                 console.log(err.response.data.data.email.message);
                                 seterror(err.response.data.data.email.message)
                             }
-                            
+
                             // L'attribut n'existe pas dans l'objet
-                          }
-                          
-                            // console.log(err.response);
-                            // seterror(err.response.data.data.password.message)
-                        
-    
+                        }
+
+                        // console.log(err.response);
+                        // seterror(err.response.data.data.password.message)
+
+
                     })
                 } else {
                     seterror("The two passwords must be the same")
@@ -124,10 +124,10 @@ const Homepage = () => {
             } else {
                 seterror("email invalid")
             }
-        }else{
+        } else {
             seterror("Password must contain at least 8 charaters")
         }
-       
+
 
 
 
@@ -161,13 +161,19 @@ const Homepage = () => {
                 // window.location.href = "/Discussions"
                 // console.log(ret.data);
                 // console.log(ret.data.accessToken);
+
                 dispatch(recupUsers(ret.data.user));
                 dispatch(recupAccesstoken(ret.data.accessToken));
                 localStorage.setItem("users", JSON.stringify(ret.data.user));
                 localStorage.setItem("accessToken", JSON.stringify(ret.data.accessToken));
-                pauseThenExecute()
-            } else {
+                console.log(JSON.stringify(ret.data.accessToken));
                 window.location.href = "/Discussions"
+
+                // localStorage.removeItem('users');
+                // localStorage.removeItem('accessToken');
+                // pauseThenExecute(ret.data.user, ret.data.accessToken)
+            } else {
+                // window.location.href = "/Discussions"
                 //console.log("error");
             }
         }).catch((err) => {
@@ -176,13 +182,21 @@ const Homepage = () => {
         })
     }
 
-    async function pauseThenExecute() {
+    async function pause2() {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        window.location.href = "/Discussions"
+    }
+
+    async function pauseThenExecute(a,b) {
+        
+        
         // Pause d'une seconde
         await new Promise(resolve => setTimeout(resolve, 1000));
-      
+        localStorage.setItem("users", JSON.stringify(a));
+        localStorage.setItem("accessToken", JSON.stringify(b));
+        pause2()
         // Exécuter l'instruction après la pause
-        window.location.href = "/Discussions"
-      }
+    }
 
     useEffect(() => {
         if (user) {
