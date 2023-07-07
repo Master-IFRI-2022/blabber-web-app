@@ -72,7 +72,7 @@ const DiscussionContainer = () => {
   return (
     <div className="">
       <Provider store={capitalStore}>
-        <ChatComponent discussionId="649f2e197b284d01cd848761" />
+        <ChatComponent discussionId="64a1aab36d81fada4a9bf733" />
       </Provider>
     </div>
   );

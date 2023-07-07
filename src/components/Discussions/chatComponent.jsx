@@ -119,7 +119,7 @@ const ChatComponent = () => {
     // Envoyer des messages au serveur socket
     //socket.emit("chatMessage", "Bonjour serveur socket!");
 
-    setUser("649c7a993dd917d6bd1dec0e");
+    setUser("649ee4657b284d01cd84875c");
     fetchMessages();
 
     return () => {

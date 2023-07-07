@@ -2,7 +2,6 @@ import React from 'react';
 import Sidebar from '../components/Sidebar/Sidebar';
 import Nav from '../components/Nav/Nav';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import PrivateGroupDiscussion from '../components/Discussions/PrivateGroupDiscussion';
 import DiscussionContainer from '../components/Discussions/container';
 const AccueilDash = () => {
   return (
