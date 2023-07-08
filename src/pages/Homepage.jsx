@@ -134,14 +134,7 @@ const Homepage = () => {
     }
 
     const connexion = (e) => {
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2ODg0OTM5OTQsImV4cCI6MTY5MTA4NTk5NCwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsInN1YiI6IjY0YTQ1OWU1ZjU4NGFjNGFjMjg3ZDBkZiIsImp0aSI6ImYwZjExZjk5LWYyZWEtNDYxYS1iMjI5LWM4MzE2ZTdiZTYxZSJ9.dnXFL7wUASuinmSHwwNdbtDcjyVHPed8Y5lyjKBzWwc"
-
-
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
+        
         const data = {
             // strategy: "local",
             // email: "kala@gmail.com",
@@ -158,14 +151,13 @@ const Homepage = () => {
             password: connectForm.mdp,
         }).then((ret) => {
             if (ret) {
-                // window.location.href = "/Discussions"
+                window.location.href = "/Discussions"
                 // console.log(ret.data);
                 // console.log(ret.data.accessToken);
                 dispatch(recupUsers(ret.data.user));
                 dispatch(recupAccesstoken(ret.data.accessToken));
                 localStorage.setItem("users", JSON.stringify(ret.data.user));
                 localStorage.setItem("accessToken", JSON.stringify(ret.data.accessToken));
-                pauseThenExecute()
             } else {
                 window.location.href = "/Discussions"
                 //console.log("error");
@@ -175,14 +167,6 @@ const Homepage = () => {
             console.log(err.response.data.message);
         })
     }
-
-    async function pauseThenExecute() {
-        // Pause d'une seconde
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      
-        // Exécuter l'instruction après la pause
-        window.location.href = "/Discussions"
-      }
 
     useEffect(() => {
         if (user) {
@@ -195,7 +179,7 @@ const Homepage = () => {
             {!modifmdp ? (
                 <div>
                     {clic1 ? (
-                        <img src="/blab3.png" alt="" className='h-12' />
+                        <img src="./blab3.png" alt="" className='h-12' />
                     ) : (
                         <></>
                     )}
@@ -203,7 +187,7 @@ const Homepage = () => {
                         {/* ********************************    Accueil   **************************************** */}
                         <div className={`w-1/2 pl-16 flex-row ${!clic1 ? "block" : "hidden"}`}>
                             <div className='h-20 max-w-[360px]'>
-                                <img src='/blab3.png' className='' />
+                                <img src='./blab3.png' className='' />
 
                             </div>
                             <h1 className='font-bold text-4xl max-w-sm mt-10 text-gray-600 '>
@@ -359,7 +343,7 @@ const Homepage = () => {
 
 
                         <div className='w-1/2  '>
-                            <img src='/blab33.png' className=' w-full h-full object-cover' />
+                            <img src='./blab33.png' className=' w-full h-full object-cover' />
                         </div>
                     </div>
                 </div>
