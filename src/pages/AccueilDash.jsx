@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import Contact from './Contactpage';
 import Decouvertes from './Decouvertespage';
 import Demande from './Demandepage';
+import DiscussionContainer from '../components/Discussions/container';
 
 const AccueilDash = () => {
 
@@ -16,7 +17,7 @@ const AccueilDash = () => {
                     <Sidebar />
                     <div className="h-screen flex-1">
                             <Routes>
-                                <Route path="/Discussions" element={<>Discussions</>} />
+                                <Route path="/Discussions" element={<DiscussionContainer />} />
                                 <Route path="/Contacts" element={<Contact/>} />
                                 <Route path="/Demandes" element={<Demande/>} />
                                 <Route path="/Decouvrir" element={<Decouvertes/>} />
@@ -25,7 +26,6 @@ const AccueilDash = () => {
                     </div>
                 </div>
             </BrowserRouter>
-
         </div>
     );
 };
