@@ -34,6 +34,7 @@ import axios from "axios";
 
 const RightMessage = (props) => {
   const capitalData = useSelector((state) => state.capitalData);
+  const accessToken = useSelector((state) => state.users.accesstoken);
   const dispatch = useDispatch();
   const [showReactions, setShowReactions] = useState(false);
   const [reactions, setReactions] = useState(["😂", "😥", "❤"]);
@@ -51,7 +52,7 @@ const RightMessage = (props) => {
         `http://localhost:3030/users/${participantId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -92,7 +93,7 @@ const RightMessage = (props) => {
 
   const downloadFileWithToken = (url) => {
     const headers = {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${accessToken}`,
     };
 
     fetch(url, { headers })

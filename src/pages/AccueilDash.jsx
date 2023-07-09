@@ -6,6 +6,7 @@ import Contact from './Contactpage';
 import Decouvertes from './Decouvertespage';
 import Demande from './Demandepage';
 import DiscussionContainer from '../components/Discussions/container';
+import Profil from './Profil';
 
 const AccueilDash = () => {
 
@@ -17,15 +18,16 @@ const AccueilDash = () => {
                     <Sidebar />
                     <div className="h-screen flex-1">
                             <Routes>
-                                <Route path="/Discussions" element={<DiscussionContainer />} />
+                                <Route path="/Discussions" element={<DiscussionContainer/>} />
                                 <Route path="/Contacts" element={<Contact/>} />
                                 <Route path="/Demandes" element={<Demande/>} />
                                 <Route path="/Decouvrir" element={<Decouvertes/>} />
-                                <Route path="/Profil" element={<>Profil</>} />
+                                <Route path="/Profil" element={<Profil/>} />
                             </Routes>
                     </div>
                 </div>
             </BrowserRouter>
+
         </div>
     );
 };

@@ -31,9 +31,13 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+// import { useDispatch, useSelector } from "react-redux";
+
 
 const LeftMessage = (props) => {
   const capitalData = useSelector((state) => state.capitalData);
+  const accessToken = useSelector((state) => state.users.accesstoken);
   const dispatch = useDispatch();
 
   const [showReactions, setShowReactions] = useState(false);
@@ -52,7 +56,7 @@ const LeftMessage = (props) => {
         `http://localhost:3030/users/${participantId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -204,7 +208,7 @@ const LeftMessage = (props) => {
                         icon={faDownload}
                         className="text-xl"
                         onClick={() => {
-                          setFile(null);
+                          // setFile(null);
                         }}
                       />
                     </a>

@@ -1,7 +1,9 @@
 import axios, { Axios } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { recupUsers, recupAccesstoken } from '../feature/UserSlice';
+import { recupUsers, recupAccesstoken, setrefresh } from '../feature/UserSlice';
+import { useSelector } from "react-redux";
+
 // import { useNavigate } from 'react-router-dom';
 
 
@@ -12,6 +14,10 @@ const Homepage = () => {
     const [modifmdp, setModifmdp] = useState(false);
     // const [errInsc, setErrInsc] = useState()
     const dispatch = useDispatch();
+    const userr = useSelector((state) => state.users.users);
+    const accessToken = useSelector((state) => state.users.accesstoken);
+    const refresh = useSelector((state) => state.users.refresh);
+
 
 
 
@@ -74,11 +80,12 @@ const Homepage = () => {
         setInscriForm({ ...inscriForm, [name]: value })
     }
     const enregistrement = (e) => {
-        if (inscriForm.mdp.length > 8 || inscriForm.mdp.length == 8 ) {
+        seterror(null)
+        setsucc1(null)
+        if (inscriForm.mdp.length > 8 || inscriForm.mdp.length == 8) {
             if (inscriForm.email.match(regex)) {
                 if (inscriForm.mdp === inscriForm.conf_mdp) {
-                    seterror(null)
-    
+
                     axios.post("http://localhost:3030/users", {
                         lastname: inscriForm.nom,
                         firstname: inscriForm.prenom,
@@ -89,10 +96,18 @@ const Homepage = () => {
                         if (ret) {
                             console.log("Succes");
                             setsucc1("Utilisateur créé")
-
+                            seterror(null)
+                            setInscriForm({
+                                nom: "",
+                                prenom: "",
+                                username: "",
+                                email: "",
+                                mdp: "",
+                                conf_mdp: "",
+                            })
                             // setClicInsc(!clicInsc); setClicCon(!clicCon)
                         } else {
-    
+
                         }
                     }).catch((err) => {
                         console.log(err);
@@ -100,41 +115,62 @@ const Homepage = () => {
                             // L'attribut existe dans l'objet
                             console.log(err.response.data.data.password.message);
                             seterror(err.response.data.data.password.message)
-                          } else {
+                        } else {
                             if (err.response.data.data.hasOwnProperty('username')) {
                                 console.log(err.response.data.data.username.message);
                                 seterror(err.response.data.data.username.message)
-                            }else{
+                            } else {
                                 console.log(err.response.data.data.email.message);
                                 seterror(err.response.data.data.email.message)
                             }
-                            
+
                             // L'attribut n'existe pas dans l'objet
-                          }
-                          
-                            // console.log(err.response);
-                            // seterror(err.response.data.data.password.message)
-                        
-    
+                        }
+
+                        // console.log(err.response);
+                        // seterror(err.response.data.data.password.message)
+
+
                     })
                 } else {
                     seterror("The two passwords must be the same")
+                    setsucc1(null)
                     // console.log(error);
                 }
             } else {
                 seterror("email invalid")
+                setsucc1(null)
+
             }
-        }else{
+        } else {
             seterror("Password must contain at least 8 charaters")
+            setsucc1(null)
+
         }
-       
+
 
 
 
     }
 
+    const autocon = () => {
+        if (JSON.parse(localStorage.getItem("users") + "") && refresh == true) {
+            window.location.href = "/Contacts"
+
+        } else {
+            setClic1(!clic1); setClicCon(!clicCon)
+        }
+    }
+
     const connexion = (e) => {
-        
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE2ODg0OTM5OTQsImV4cCI6MTY5MTA4NTk5NCwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsInN1YiI6IjY0YTQ1OWU1ZjU4NGFjNGFjMjg3ZDBkZiIsImp0aSI6ImYwZjExZjk5LWYyZWEtNDYxYS1iMjI5LWM4MzE2ZTdiZTYxZSJ9.dnXFL7wUASuinmSHwwNdbtDcjyVHPed8Y5lyjKBzWwc"
+
+
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+
         const data = {
             // strategy: "local",
             // email: "kala@gmail.com",
@@ -144,34 +180,52 @@ const Homepage = () => {
             password: connectForm.mdp,
         }
 
+        if (connectForm.email && connectForm.mdp) {
+            axios.post("http://localhost:3030/authentication", {
+                strategy: "local",
+                email: connectForm.email,
+                password: connectForm.mdp,
+            }).then((ret) => {
+                if (ret) {
+                    // window.location.href = "/Discussions"
+                    // console.log(ret.data);
+                    // console.log(ret.data.accessToken);
+                    dispatch(recupUsers(ret.data.user));
+                    dispatch(recupAccesstoken(ret.data.accessToken));
+                    localStorage.setItem("users", JSON.stringify(ret.data.user));
+                    localStorage.setItem("accessToken", JSON.stringify(ret.data.accessToken));
+                    localStorage.setItem("refresh", JSON.stringify(refresh));
+                    pauseThenExecute()
+                } else {
+                    window.location.href = "/Discussions"
+                    //console.log("error");
+                }
+            }).catch((err) => {
+                seterror("Mot de passe ou nom d'utilisateur incorrect");
+                console.log(err.response.data.message);
+            })
+        } else {
+            seterror("Veuillez remplir tous les champs")
+        }
 
-        axios.post("http://localhost:3030/authentication", {
-            strategy: "local",
-            email: connectForm.email,
-            password: connectForm.mdp,
-        }).then((ret) => {
-            if (ret) {
-                window.location.href = "/Discussions"
-                // console.log(ret.data);
-                // console.log(ret.data.accessToken);
-                dispatch(recupUsers(ret.data.user));
-                dispatch(recupAccesstoken(ret.data.accessToken));
-                localStorage.setItem("users", JSON.stringify(ret.data.user));
-                localStorage.setItem("accessToken", JSON.stringify(ret.data.accessToken));
-            } else {
-                window.location.href = "/Discussions"
-                //console.log("error");
-            }
-        }).catch((err) => {
-            seterror("Mot de passe ou nom d'utilisateur incorrect");
-            console.log(err.response.data.message);
-        })
+
+    }
+
+    async function pauseThenExecute() {
+        // Pause d'une seconde
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Exécuter l'instruction après la pause
+        window.location.href = "/Contacts"
     }
 
     useEffect(() => {
-        if (user) {
-            setMess('Se connecter en tant que ' + user)
+        if (JSON.parse(localStorage.getItem("refresh") + "")) {
+            if (JSON.parse(localStorage.getItem("users") + "") && JSON.parse(localStorage.getItem("refresh") + "") == true) {
+                setMess('Se connecter en tant que ' + JSON.parse(localStorage.getItem("users") + "").username)
+            }
         }
+
     }, []);
 
     return (
@@ -200,7 +254,7 @@ const Homepage = () => {
 
                             <div className='w-[360px] bg-blue-500 rounded-md text-white text-center mt-11 h-7
                         shadow-lg shadow-blue-400/50 cursor-pointer hover:shadow-blue-800/50'
-                                onClick={(e) => { setClic1(!clic1); setClicCon(!clicCon) }} >
+                                onClick={(e) => { autocon() }} >
                                 {mess}
                             </div>
                             <div className={`w-[360px] ${user ? "block" : "hidden"}`}>
@@ -241,13 +295,15 @@ const Homepage = () => {
                                     placeholder='Mot de passe' value={connectForm.mdp} onChange={Connectinfos} />
                             </div>
                             <div className='max-w-sm flex'>
-                                <input type="checkbox" className='mt-5'
+                                <input type="checkbox" className='mt-5' value={refresh}
                                     onChange={(e) => {
-                                        setCon_cont(!con_cont); console.log(con_cont);
+                                        setCon_cont(!con_cont); console.log(refresh); dispatch(setrefresh(!refresh));
                                     }}
-                                    checked={con_cont === true ? true : false}
+                                    // checked={con_cont === true ? true : false}
+                                    checked={refresh === true ? true : false}
                                 />
-                                <p className='text-xs text-center mt-5 ml-7 text-blue-600 underline cursor-pointer'>
+                                <p
+                                    className='text-xs text-center mt-5 ml-7 text-blue-600 underline cursor-pointer'>
                                     Rester connecté(e)
                                 </p>
                             </div>
@@ -265,7 +321,7 @@ const Homepage = () => {
 
 
                             <p className='max-w-sm text-xs text-center mt-8 text-blue-600 underline cursor-pointer'
-                                onClick={(e) => { setClicCon(!clicCon); setClicInsc(!clicInsc) }}>
+                                onClick={(e) => { setClicCon(!clicCon); setClicInsc(!clicInsc); seterror("") }}>
                                 Pas de compte? S'inscrire
                             </p>
 
@@ -332,7 +388,7 @@ const Homepage = () => {
                                 Créer mon compte
                             </div>
                             <p className='max-w-sm text-xs text-center mt-8 text-blue-600 underline cursor-pointer'
-                                onClick={(e) => { setClicInsc(!clicInsc); setClicCon(!clicCon) }}>
+                                onClick={(e) => { setClicInsc(!clicInsc); setClicCon(!clicCon); seterror(""); setsucc1("") }}>
                                 Déjà membre? Se connecter
                             </p>
 

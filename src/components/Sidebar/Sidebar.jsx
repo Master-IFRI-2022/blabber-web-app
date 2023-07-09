@@ -7,11 +7,14 @@ import { BsPersonCircle } from "react-icons/bs";
 import { HiChatAlt2 } from "react-icons/hi";
 import { HiUserGroup } from "react-icons/hi";
 import { AiOutlineLogout } from "react-icons/ai";
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 function Sidebar() {
     const [open, setOpen] = useState(true);
+    const user = useSelector((state) => state.users.users);
+    const accessToken = useSelector((state) => state.users.accesstoken);
     // const navigate = useNavigate();
 
 
@@ -32,12 +35,12 @@ function Sidebar() {
                     /> */}
             </div>
             <div className="flex flex-col gap-x-4 items-center mt-4 ">
-                <BsPersonCircle className={`w-10 h-10 text-gray-700 ${!open && "scale-0"}`} />
+                {/* <BsPersonCircle className={`w-10 h-10 text-gray-700 ${!open && "scale-0"}`} /> */}
                 <h1
                     className={`text-gray-700 mt-4 origin-left font-medium text-xl duration-200 ${!open && "scale-0"
                         }`}
                 >
-                    Midir
+                    {user.username}
                 </h1>
             </div>
             <ul className="pt-7">
@@ -107,7 +110,13 @@ function Sidebar() {
                 </Link>
                         
                 <li className={`flex my-3 min-h-[40px] rounded-3xl p-2 cursor-pointer text-red-600 text-base items-center gap-x-4 
-                             hover:bg-blue-200 hover:shadow-md`}
+                             hover:bg-blue-200 hover:shadow-md`} onClick={()=>{
+                                localStorage.removeItem('users');
+                                localStorage.removeItem('accessToken');
+                                localStorage.removeItem('refresh');
+                                window.location.href = "/"
+
+                            }}
                 >
                     <AiOutlineLogout />
                     <span className={`${!open && "hidden"} origin-left duration-200`}>
