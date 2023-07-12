@@ -6,7 +6,7 @@ import AccueilDash from './pages/AccueilDash';
 import Nav from './components/Nav/Nav';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { recupAccesstoken, recupUsers } from './feature/UserSlice';
+import { recupAccesstoken, recupUsers, setrefresh } from './feature/UserSlice';
 import { useDispatch } from 'react-redux';
 
 
@@ -27,6 +27,10 @@ function App() {
 
     if (JSON.parse(localStorage.getItem("accessToken") + "")) {
       dispatch(recupAccesstoken(JSON.parse(localStorage.getItem("accessToken") + "")));
+    }
+
+    if (JSON.parse(localStorage.getItem("refresh") + "")) {
+      dispatch(setrefresh(JSON.parse(localStorage.getItem("refresh") + "")));
     }
 
     console.log(accueil);
